@@ -7,20 +7,26 @@ app = Flask(__name__)
 def index():
     prediction = None
     player_id = ""
+    error = ""
 
     if request.method == "POST":
         player_id = request.form.get("player_id", "").strip()
 
-        if player_id:
+        # يقبل فقط ID مكون من 10 أرقام
+        if not player_id.isdigit():
+            error = "❌ يجب إدخال أرقام فقط."
+        elif len(player_id) != 10:
+            error = "❌ يجب أن يكون الـ ID مكونًا من 10 أرقام."
+        else:
             prediction = []
-            for i in range(7):
-                row = random.randint(1, 5)
-                prediction.append(row)
+            for _ in range(7):
+                prediction.append(random.randint(1, 5))
 
     return render_template(
         "index.html",
         prediction=prediction,
-        player_id=player_id
+        player_id=player_id,
+        error=error
     )
 
 if __name__ == "__main__":
